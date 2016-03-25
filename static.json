@@ -1,0 +1,8 @@
+{
+  "root": "./resources/public",
+  "routes": {
+    "css/**": "css/**",
+    "js/**": "js/**",
+    "/**": "index.html"
+  }
+}
