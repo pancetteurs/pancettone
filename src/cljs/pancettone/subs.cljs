@@ -11,3 +11,8 @@
  :tickets
  (fn [db]
    (reaction (:tickets @db))))
+
+(re-frame/register-sub
+ :user
+ (fn [db]
+   (reaction (:user @db))))

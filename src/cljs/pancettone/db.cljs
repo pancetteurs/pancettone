@@ -1,4 +1,6 @@
 (ns pancettone.db)
 
 (def default-db
-  {:tickets {}})
+  {:tickets {}
+   :user nil
+   :root nil})
