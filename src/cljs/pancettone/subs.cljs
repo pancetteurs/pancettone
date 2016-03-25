@@ -25,6 +25,11 @@
    (reaction (:user @db))))
 
 (re-frame/register-sub
+ :root
+ (fn [db]
+   (reaction (:root @db))))
+
+(re-frame/register-sub
  :search-form
  (fn [db]
    (reaction (:search-form @db))))
