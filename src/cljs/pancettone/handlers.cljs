@@ -9,13 +9,34 @@
  (fn  [_ _]
    (let [root (m/connect config/firebase-url)
          child (m/get-in root [:tickets])]
-     (m/listen-to child :value #(re-frame/dispatch [:process-tickets %])))
-   db/default-db))
+     (.onAuth root #(re-frame/dispatch [:login-success %]))
+     (m/listen-to child :value #(re-frame/dispatch [:process-tickets %]))
+     (assoc db/default-db :root root))))
 
 (re-frame/register-handler
  :process-tickets
  (fn [db [_ response]]
    (assoc db :tickets (get response 1))))
+
+(re-frame/register-handler
+  :login-request
+  (fn [db [_ response]]
+    (.authWithOAuthPopup (:root db) "facebook")
+    db))
+
+(re-frame/register-handler
+  :login-success
+  (fn [db [_ user]]
+    (if (nil? user)
+      db
+      (assoc db :user user))))
+
+(re-frame/register-handler
+  :logout
+  (fn [db [_ user]]
+    (m/unauth (:root db))
+    (assoc db :user nil)))
+
 
 (re-frame/register-handler
  :set-active-panel

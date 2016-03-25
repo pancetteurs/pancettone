@@ -16,8 +16,9 @@
 (defmethod panels :default [] [:div])
 
 (defn main-panel []
-  (let [active-panel (re-frame/subscribe [:active-panel])]
+  (let [active-panel (re-frame/subscribe [:active-panel])
+        user (re-frame/subscribe [:user])]
     (fn []
       [:div
-       [navbar-comp @active-panel]
+       [navbar-comp @active-panel @user]
        [:div {:style (:page style)} (panels @active-panel)]])))
