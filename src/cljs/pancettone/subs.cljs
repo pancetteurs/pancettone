@@ -8,6 +8,13 @@
     (reaction (:active-panel @db))))
 
 (re-frame/register-sub
+ :cities
+ (fn [db]
+  (reaction
+   (let [cities (:cities @db)]
+     (into [["" "All"]] (map #(vec [% %])) cities)))))
+
+(re-frame/register-sub
  :tickets
  (fn [db]
    (reaction (:tickets @db))))
@@ -16,3 +23,8 @@
  :user
  (fn [db]
    (reaction (:user @db))))
+
+(re-frame/register-sub
+ :search-form
+ (fn [db]
+   (reaction (:search-form @db))))

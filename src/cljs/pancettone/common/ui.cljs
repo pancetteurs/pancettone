@@ -9,4 +9,4 @@
              :error "#E14956"})
 
 (def layout {:viewport-min 768
-                 :viewport-max 940})
+             :viewport-max 940})
