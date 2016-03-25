@@ -5,6 +5,11 @@
               [pancettone.db :as db]))
 
 (re-frame/register-handler
+  :set-active-panel
+  (fn [db [_ active-panel]]
+    (assoc db :active-panel active-panel)))
+
+(re-frame/register-handler
  :initialize-db
  (fn  [_ _]
    (let [root (m/connect config/firebase-url)
@@ -37,8 +42,7 @@
     (m/unauth (:root db))
     (assoc db :user nil)))
 
-
 (re-frame/register-handler
- :set-active-panel
- (fn [db [_ active-panel]]
-   (assoc db :active-panel active-panel)))
+ :change-search
+ (fn [db [_ field val]]
+   (assoc-in db [:search-form field] val)))

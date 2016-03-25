@@ -45,3 +45,9 @@ body {
   color: #fff;
   background-color: #67b972;
 }
+
+.widget {
+  background-color: #fff;
+  border-radius: 3px;
+  padding: 20px;
+}
