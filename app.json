@@ -1,0 +1,16 @@
+{
+  "name": "pancettone",
+  "description": "Pancetta is an app designed to make the world a better place",
+  "scripts": {
+  },
+  "env": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-clojure"
+    }
+  ]
+}
