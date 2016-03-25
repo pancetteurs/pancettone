@@ -1,4 +1,5 @@
 (ns pancettone.navbar.views
+  (:require-macros [reagent.ratom :refer [reaction]])
   (:require [pancettone.common.ui :as ui]
             [re-frame.core :as re-frame]))
 
@@ -17,15 +18,21 @@
             :item {:padding 15 :cursor "pointer"}
             :item-active {:background-color (:bg ui/colors) :color (:bg-negative ui/colors)}})
 
-(defn navbar-comp [active-panel user]
-  (let [is-logged-in (not (nil? user))]
-    [:div {:style (:header-container style)}
-     [:div {:style (:container style)}
-      [:div {:style (merge
-                     (:item style)
-                     (if (= active-panel :home-panel)
-                       (:item-active style)))} "Home"]
-      [:div {:on-click #(re-frame/dispatch [(if is-logged-in :logout :login-request)])
-             :style (merge
-                     (:item style)
-                     (:item-right style))} (if is-logged-in "Logout" "Login")]]]))
+(defn navbar-comp []
+  (let [user (re-frame/subscribe [:user])
+        root (re-frame/subscribe [:root])
+        active-panel (re-frame/subscribe [:active-panel])
+        is-logged-in (reaction (not (nil? @user)))]
+    (fn []
+      [:div {:style (:header-container style)}
+       [:div {:style (:container style)}
+        [:div {:style (merge
+                       (:item style)
+                       (if (= @active-panel :home-panel)
+                         (:item-active style)))} "Home"]
+        [:div {:on-click #(if @is-logged-in
+                            (re-frame/dispatch [:logout])
+                            (.authWithOAuthPopup @root "facebook"))
+               :style (merge
+                       (:item style)
+                       (:item-right style))} (if @is-logged-in "Logout" "Login")]]])))

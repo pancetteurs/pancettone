@@ -24,12 +24,6 @@
    (assoc db :tickets (get response 1))))
 
 (re-frame/register-handler
-  :login-request
-  (fn [db [_ response]]
-    (.authWithOAuthPopup (:root db) "facebook")
-    db))
-
-(re-frame/register-handler
   :login-success
   (fn [db [_ user]]
     (if (nil? user)
