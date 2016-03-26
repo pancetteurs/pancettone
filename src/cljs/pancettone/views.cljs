@@ -6,7 +6,6 @@
 
 (def style {:page {:padding 20
                    :max-width (:viewport-max ui/layout)
-                   :min-width (:viewport-min ui/layout)
                    :margin-left "auto"
                    :margin-right "auto"}})
 

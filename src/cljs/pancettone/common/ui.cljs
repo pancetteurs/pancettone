@@ -8,5 +8,4 @@
              :text-negative "#909297"
              :error "#E14956"})
 
-(def layout {:viewport-min 768
-             :viewport-max 940})
+(def layout {:viewport-max 940})

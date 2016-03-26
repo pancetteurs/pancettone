@@ -14,7 +14,7 @@
   (reagent/render [views/main-panel]
                   (.getElementById js/document "app")))
 
-(defn ^:export init [] 
-  (routes/app-routes)
+(defn ^:export init []
   (re-frame/dispatch-sync [:initialize-db])
+  (routes/app-routes)
   (mount-root))

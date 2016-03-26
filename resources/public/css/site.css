@@ -51,3 +51,7 @@ body {
   border-radius: 3px;
   padding: 20px;
 }
+
+.label {
+  color: #909297;
+}

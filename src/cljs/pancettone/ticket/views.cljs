@@ -10,5 +10,9 @@
     [:span "🚆 "]
     [:span (:from ticket)]
     [:span " ➔ " (:to ticket)]
-    [:span " on " (:on ticket)]
-    [:span " for " (price-to-str (:price ticket))]]))
+    [:span {:class-name "label"} " on the "]
+    [:span (:on ticket)]
+    [:span {:class-name "label"} " at "]
+    [:span (:at ticket)]
+    [:span {:class-name "label"} " for "]
+    [:span (price-to-str (:price ticket))]]))
