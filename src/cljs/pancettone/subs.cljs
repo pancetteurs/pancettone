@@ -12,7 +12,7 @@
  (fn [db]
   (reaction
    (let [cities (:cities @db)]
-     (into [["" "All"]] (map #(vec [% %])) cities)))))
+     (into [["" "Anywhere"]] (map #(vec [% %])) cities)))))
 
 (re-frame/register-sub
  :tickets
