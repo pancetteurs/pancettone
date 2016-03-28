@@ -1,8 +1,9 @@
 (defproject pancettone "0.1.0-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.7.0"]
-                 [org.clojure/clojurescript "1.7.170"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojurescript "1.8.34"]
                  [reagent "0.5.1"]
                  [re-frame "0.6.0"]
+                 [com.andrewmcveigh/cljs-time "0.4.0"]
                  [secretary "1.2.3"]
                  [matchbox "0.0.8-SNAPSHOT"]]
 

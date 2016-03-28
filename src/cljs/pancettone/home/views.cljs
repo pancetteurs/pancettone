@@ -1,7 +1,14 @@
 (ns pancettone.home.views
   (:require-macros [reagent.ratom :refer [reaction]])
   (:require [re-frame.core :as re-frame]
+            [pancettone.components.date-picker :refer [date-picker-component]]
+            [pancettone.components.select :refer [select-component]]
             [pancettone.ticket.views :refer [ticket-comp]]))
+
+(def style {:form {:margin-bottom 25
+                   :text-align "center"
+                   :padding 20
+                   :font-size 30}})
 
 (defn visible? [ticket date from to]
   (and (or (= "" date) (= date (:on ticket)))
@@ -17,23 +24,17 @@
         to (reaction (:to @form))]
     (fn []
       [:div
-       [:form {:style {:margin-bottom 20} :class-name "pure-form widget"}
-        [:h3 "Find a ticket"]
-        [:span "I am looking for a train on the "]
-        [:input {:type "date"
-                 :value @date
-                 :min (-> (js/Date.) .toISOString (.slice 0 10))
-                 :on-change #(re-frame/dispatch [:change-search :date (-> % .-target .-value)])}]
-        [:span " from "]
-        [:select {:default-value @from
-                  :on-change #(re-frame/dispatch [:change-search :from (-> % .-target .-value)])}
-         (doall (for [[val name] @cities :when (not= name @to)]
-            [:option {:key val :value val} name]))]
-        [:span " to "]
-        [:select {:default-value @from
-                  :on-change #(re-frame/dispatch [:change-search :to (-> % .-target .-value)])}
-         (doall (for [[val name] @cities :when (not= name @from)]
-            [:option {:key val :value val} name]))]]
+        [:div {:style (:form style)}
+         [:span "I am looking for a train on the "]
+         [date-picker-component {:on-change #(re-frame/dispatch [:change-search :date %])}]
+         [:span " from"]
+         [select-component {:options @cities
+                            :default-value @from
+                            :on-change #(re-frame/dispatch [:change-search :from %])}]
+         [:span " to "]
+         [select-component {:options @cities
+                            :default-value @from
+                            :on-change #(re-frame/dispatch [:change-search :to %])}]]
        (if (= 0 (count @tickets))
          [:div "Loading..."]
          [:div (doall (for [ticket-ref @tickets
