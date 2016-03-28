@@ -17,7 +17,8 @@
                          :cursor "pointer"}
             :arrow-right {:float "right"
                           :cursor "pointer"}
-            :day-selected {:background-color (:bg ui/colors)
+            :day-selected {:font-weight 600}
+            :day-hovered {:background-color (:bg-widget-active ui/colors)
                            :color "black"}
             :day-disabled {:color (:bg ui/colors)}
             :header {:text-align "center"
@@ -27,7 +28,9 @@
                      :border "1px solid transparent"
                      :border-bottom (str "1px solid" (:bg ui/colors))}
             :picker {:background-color "white"
+                     :z-index 100
                      :position "absolute"
+                     :left "calc(50% - 160px)"
                      :padding 15
                      :width 287
                      :border (str "1px solid " (:bg ui/colors))
@@ -94,27 +97,29 @@
         end-date (time/plus last-day-of-the-month (time/days diff2))]
     (time-range start-date end-date (time/days 1))))
 
-(defn select-date [date on-change selected-date is-open]
+(defn select-date [date on-change selected-date open? hovered]
   (reset! selected-date date)
-  (reset! is-open false)
+  (reset! open? false)
+  (reset! hovered nil)
   (on-change (time-format/unparse (time-format/formatters :date) date)))
 
 (defn date-picker-component [props]
   (let [selected-date (atom nil)
-        is-open (atom false)
+        open? (atom false)
+        hovered (atom nil)
         filter-date (atom {:month (time/month (time/today))
                            :year (time/year (time/today))})
-        placeholder "dd-MM-YYYY"]
+        placeholder "YYYY-MM-dd"]
     (fn []
       [:div {:style (:container style)}
-       [:div {:on-blur #(reset! is-open false)
+       [:div {:on-blur #(reset! open? false)
               :tab-index "-1"
-              :on-click #(reset! is-open (not @is-open))
+              :on-click #(reset! open? (not @open?))
               :style (:label style)}
         (if (not (nil? @selected-date))
           (time-format/unparse (time-format/formatters :date) @selected-date)
           placeholder)]
-       (when @is-open
+       (when @open?
          [:div {:style (:picker style)
                 :on-mouse-down #(.preventDefault %)}
           [:table
@@ -128,21 +133,28 @@
                       :on-mouse-down #(next-month filter-date)} ">"]]]
             [:tr
              (for [i (range 7)]
-               [:th {:style (:header style)} (get days-label i)])]]
+               [:th {:style (:header style) :key i} (get days-label i)])]]
            [:tbody
             (doall
               (for [week (partition 7 (get-days-range @filter-date))]
-                [:tr
+                [:tr {:key week}
                  (doall
-                   (for [day week :let [is-selected (and (not (nil? @selected-date)) (time/equal? day @selected-date))
-                                        is-disabled (not= (:month @filter-date) (time/month day))]]
+                   (for [day week :let [selected? (and (not (nil? @selected-date)) (time/equal? day @selected-date))
+                                        disabled? (or (not= (:month @filter-date) (time/month day))
+                                                        (time/before? day (time/today)))]]
                      [:td {:style (merge (:day style)
-                                         (when (and is-selected (not is-disabled))
+                                         (when (and selected? (not disabled?))
                                            (:day-selected style))
-                                         (when is-disabled
-                                           (:day-disabled style)))
-                           :on-mouse-down (when (not is-disabled)
-                                            #(select-date day (:on-change props) selected-date is-open))
+                                         (when disabled?
+                                           (:day-disabled style))
+                                         (when (and (not (nil? @hovered))
+                                                    (time/equal? @hovered day))
+                                           (:day-hovered style)))
+                           :on-mouse-down (when (not disabled?)
+                                            #(select-date day (:on-change props) selected-date open? hovered))
+                           :on-mouse-over (when (not disabled?)
+                                            #(reset! hovered day))
+                           :on-mouse-out (when (not disabled?)
+                                            #(reset! hovered nil))
                            :key day}
-                      (when (not is-disabled)
-                        (str (time/day day)))]))]))]]])])))
+                      (str (time/day day))]))]))]]])])))
