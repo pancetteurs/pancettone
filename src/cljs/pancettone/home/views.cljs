@@ -16,7 +16,7 @@
        (or (= "" to) (= to (:to ticket)))))
 
 (defn home-panel []
-  (let [cities (re-frame/subscribe [:cities])
+  (let [cities (re-frame/subscribe [:cities true])
         tickets (re-frame/subscribe [:tickets])
         form (re-frame/subscribe [:search-form])
         date (reaction (:date @form))
@@ -33,7 +33,7 @@
                             :on-change #(re-frame/dispatch [:change-search :from %])}]
          [:span " to "]
          [select-component {:options @cities
-                            :default-value @from
+                            :default-value @to
                             :on-change #(re-frame/dispatch [:change-search :to %])}]]
        (if (= 0 (count @tickets))
          [:div "Loading..."]

@@ -1,6 +1,7 @@
 (ns pancettone.navbar.views
   (:require-macros [reagent.ratom :refer [reaction]])
-  (:require [pancettone.common.ui :as ui]
+  (:require [secretary.core :as secretary :include-macros true]
+            [pancettone.common.ui :as ui]
             [re-frame.core :as re-frame]))
 
 (def style {:header-container {:background-color (:bg-negative ui/colors)}
@@ -29,7 +30,14 @@
         [:div {:style (merge
                        (:item style)
                        (if (= @active-panel :home-panel)
-                         (:item-active style)))} "Home"]
+                         (:item-active style)))
+               :on-click #(secretary/dispatch! "/")} "Home"]
+        (when @is-logged-in 
+          [:div {:style (merge
+                         (:item style)
+                         (if (= @active-panel :create-panel)
+                           (:item-active style)))
+                 :on-click #(secretary/dispatch! "/create")} "Sell"])
         [:div {:on-click #(if @is-logged-in
                             (re-frame/dispatch [:logout])
                             (.authWithOAuthPopup @root "facebook"))

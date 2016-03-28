@@ -20,6 +20,8 @@
   ;; define routes here
   (defroute "/" []
     (re-frame/dispatch [:set-active-panel :home-panel]))
+  (defroute "/create" []
+    (re-frame/dispatch [:set-active-panel :create-panel]))
 
   ;; --------------------
   (hook-browser-navigation!))

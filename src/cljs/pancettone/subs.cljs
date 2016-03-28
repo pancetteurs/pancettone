@@ -9,10 +9,13 @@
 
 (re-frame/register-sub
  :cities
- (fn [db]
+ (fn [db [_ anywhere?]]
   (reaction
-   (let [cities (:cities @db)]
-     (into [["" "Anywhere"]] (map #(vec [% %])) cities)))))
+   (let [cities (:cities @db)
+         new-cities (map #(vec [% %]) cities)]
+     (if anywhere?
+       (into [["" "Anywhere"]] new-cities)
+       new-cities)))))
 
 (re-frame/register-sub
  :tickets
