@@ -21,5 +21,7 @@
   (defroute "/" []
     (re-frame/dispatch [:set-active-panel :home-panel]))
 
+  (defroute "/tickets" []
+    (re-frame/dispatch [:set-active-panel :tickets-panel true]))
   ;; --------------------
   (hook-browser-navigation!))

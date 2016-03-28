@@ -2,6 +2,7 @@
     (:require [re-frame.core :as re-frame]
               [pancettone.navbar.views :refer [navbar-comp]]
               [pancettone.home.views :refer [home-panel]]
+              [pancettone.tickets.views :refer [tickets-panel]]
               [pancettone.common.ui :as ui]))
 
 (def style {:page {:padding 20
@@ -12,6 +13,7 @@
 ;; main
 (defmulti panels identity)
 (defmethod panels :home-panel [] [home-panel])
+(defmethod panels :tickets-panel [] [tickets-panel])
 (defmethod panels :default [] [:div])
 
 (defn main-panel []
