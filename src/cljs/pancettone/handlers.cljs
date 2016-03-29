@@ -6,8 +6,10 @@
 
 (re-frame/register-handler
   :set-active-panel
-  (fn [db [_ active-panel]]
-    (assoc db :active-panel active-panel)))
+  (fn [db [_ active-panel private?]]
+    (if (and private? (nil? (:user db)))
+      (assoc db :active-panel :home-panel)
+      (assoc db :active-panel active-panel))))
 
 (re-frame/register-handler
  :initialize-db
@@ -34,7 +36,7 @@
   :logout
   (fn [db [_ user]]
     (m/unauth (:root db))
-    (assoc db :user nil)))
+    (assoc db :user nil :active-panel :home-panel)))
 
 (re-frame/register-handler
  :change-search
